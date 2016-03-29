@@ -1,4 +1,4 @@
-var Backbone = require('../backbone-parse');
+var Backbone = require('../lib/backbone-parse/backbone-parse');
 var ContactModel = require('../models/contact');
 
 var ContactsCollection = Backbone.Collection.extend({
