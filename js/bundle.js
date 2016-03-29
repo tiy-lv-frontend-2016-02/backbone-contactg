@@ -48,6 +48,12 @@
 
 	$(document).ready(function(){
 	  var Router = __webpack_require__(2);
+
+	  $('body').on('click', 'a', function (e){
+	    e.preventDefault();
+	    var href = $(this).attr('href').substr(1);
+	    Router.navigate(href, {trigger:true});
+	  });
 	});
 
 /***/ },
@@ -9904,20 +9910,37 @@
 
 	var Backbone = __webpack_require__(3);
 	var indexTemplate = __webpack_require__(7);
-
-	console.log('asdf');
+	var Contact = __webpack_require__(11);
+	var $ = __webpack_require__(1);
 
 	var Router = Backbone.Router.extend({
+	  initialize: function () {
+	    Backbone.history.start();
+	  },
 	  routes: {
-	    '': 'index'
+	    '': 'index',
+	    'contact/:contactId': 'contact'
 	  },
 	  index: function () {
-	    console.log('index');
 	    $("#container").html(indexTemplate());
 	  }
 	});
 
-	module.exports = Router;
+	var router = new Router();
+
+	router.on('route:contact', function (contactId){
+	  var contact = new Contact({
+	    objectId: contactId
+	  });
+
+	  contact.fetch({
+	    success:function(contact){
+	      $("#container").html(contact.get('first_name'));
+	    }
+	  })
+	})
+
+	module.exports = router;
 
 /***/ },
 /* 3 */
@@ -13522,7 +13545,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var H = __webpack_require__(8);
-	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<form id=\"contactForm\">");t.b("\n" + i);t.b("  <input id=\"fname\" placeholder=\"First Name\" />");t.b("\n" + i);t.b("  <input id=\"lname\" placeholder=\"Last Name\" />");t.b("\n" + i);t.b("  <input id=\"email\" placeholder=\"Email\" />");t.b("\n" + i);t.b("  <input id=\"phone\" placeholder=\"Phone\" />");t.b("\n" + i);t.b("  <input id=\"city\" placeholder=\"City\" />");t.b("\n" + i);t.b("  <input id=\"state\" placeholder=\"State\" />");t.b("\n" + i);t.b("  <button type=\"submit\">Submit</button>");t.b("\n" + i);t.b("</form>");t.b("\n" + i);t.b("<div id=\"showContact\"></div>");return t.fl(); },partials: {}, subs: {  }}, "<form id=\"contactForm\">\n  <input id=\"fname\" placeholder=\"First Name\" />\n  <input id=\"lname\" placeholder=\"Last Name\" />\n  <input id=\"email\" placeholder=\"Email\" />\n  <input id=\"phone\" placeholder=\"Phone\" />\n  <input id=\"city\" placeholder=\"City\" />\n  <input id=\"state\" placeholder=\"State\" />\n  <button type=\"submit\">Submit</button>\n</form>\n<div id=\"showContact\"></div>", H);return T.render.apply(T, arguments); };
+	module.exports = function() { var T = new H.Template({code: function (c,p,i) { var t=this;t.b(i=i||"");t.b("<form id=\"contactForm\">");t.b("\n" + i);t.b("  <input id=\"fname\" placeholder=\"First Name\" />");t.b("\n" + i);t.b("  <input id=\"lname\" placeholder=\"Last Name\" />");t.b("\n" + i);t.b("  <input id=\"email\" placeholder=\"Email\" />");t.b("\n" + i);t.b("  <input id=\"phone\" placeholder=\"Phone\" />");t.b("\n" + i);t.b("  <input id=\"city\" placeholder=\"City\" />");t.b("\n" + i);t.b("  <input id=\"state\" placeholder=\"State\" />");t.b("\n" + i);t.b("  <button type=\"submit\">Submit</button>");t.b("\n" + i);t.b("</form>");t.b("\n" + i);t.b("<div id=\"showContact\"></div>");t.b("\n" + i);t.b("<a href=\"/contact/Er0GV3HPAc\">Example</a>");return t.fl(); },partials: {}, subs: {  }}, "<form id=\"contactForm\">\n  <input id=\"fname\" placeholder=\"First Name\" />\n  <input id=\"lname\" placeholder=\"Last Name\" />\n  <input id=\"email\" placeholder=\"Email\" />\n  <input id=\"phone\" placeholder=\"Phone\" />\n  <input id=\"city\" placeholder=\"City\" />\n  <input id=\"state\" placeholder=\"State\" />\n  <button type=\"submit\">Submit</button>\n</form>\n<div id=\"showContact\"></div>\n<a href=\"/contact/Er0GV3HPAc\">Example</a>", H);return T.render.apply(T, arguments); };
 
 /***/ },
 /* 8 */
@@ -14326,6 +14349,28 @@
 
 	})( true ? exports : Hogan);
 
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Backbone = __webpack_require__(3);
+
+	var Contact = Backbone.Model.extend({
+	  _parse_class_name: 'Contact',
+	  validate: function (attr, options) {
+	    if (!validateEmail(attr.email)) {
+	      return "Email is invalid";
+	    }
+	  }
+	});
+
+	module.exports = Contact;
+
+	function validateEmail(email) {
+	    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	    return re.test(email);
+	}
 
 /***/ }
 /******/ ]);
