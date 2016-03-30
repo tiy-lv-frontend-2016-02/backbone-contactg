@@ -1,6 +1,6 @@
-var Backbone = require('../lib/backbone-parse/backbone-parse');
-var indexTemplate = require('../../templates/index.html');
-var Contact = require('../models/contact');
+var Backbone = require('js/lib/backbone-parse/backbone-parse');
+var indexTemplate = require('templates/index.html');
+var Contact = require('js/models/contact');
 var $ = require('jquery');
 
 var Router = Backbone.Router.extend({
@@ -30,4 +30,4 @@ router.on('route:contact', function (contactId){
   })
 })
 
-module.exports = router;
+export default router;
